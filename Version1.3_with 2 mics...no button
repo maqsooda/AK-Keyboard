@@ -1,0 +1,94 @@
+//these define the pin connections
+
+const int microphonePin= 0; //the microphone positive terminal will connect to analog pin A0 to be read
+const int microphonePin1= A4; //the microphone positive terminal will connect to analog pin A1 to be read
+const int ledPin= 13; //the code will flash the LED connected to pin 13
+const int buttonPin= 2;
+int sample,sample1; //the variable that will hold the value read from the microphone each time
+unsigned long time_sound, time_click;
+const int threshold= 800;//the microphone threshold sound level at which the LED will turn on
+const int threshold1= 780;//the microphone threshold sound level at which the LED will turn on
+int buttonstate=0;
+
+char char_display[]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+unsigned long distance[]={70,173,138,86,55,105,125,145,150,168,193,113,211,194,170,190,33,70,75,90,130,153,40,125,110,116};
+void setup()
+{
+//  pinMode (ledPin, OUTPUT);//sets digital pin 13 as output
+//  pinMode (buttonPin, INPUT);
+  pinMode (microphonePin1, INPUT);
+  pinMode (microphonePin, INPUT);
+  Serial.begin(9600); //sets the baud rate at 9600 so we can check the values the microphone is obtaining on the Serial Monitor
+}
+
+void loop()
+{
+  
+   sample= analogRead(microphonePin); //the arduino takes continuous readings from the microphone
+   sample1= analogRead(microphonePin1); //the arduino takes continuous readings from the microphone
+ // buttonstate=digitalRead(buttonPin);
+ 
+// if(buttonstate== HIGH)
+//  {
+   // Serial.println(sample);
+  //   time_click=millis();
+
+     
+  //  while(1)
+   //  {
+    //  sample= analogRead(microphonePin); //the arduino takes continuous readings from the microphone
+     if(sample<threshold)
+      {
+        time_click=millis();
+        Serial.print("sample ");
+     Serial.println(sample);
+  //   delay(1000);
+       // break;
+      }
+     if(sample1>0)
+      {
+        time_sound=millis();
+        Serial.print("sample1 ");
+     Serial.println(sample1);
+       Serial.print("Time click:");
+        Serial.println(time_click);
+        Serial.print("Time sound:");
+        Serial.println(time_sound);
+        myPrintChar(time_sound, time_click);
+       delay(1000);
+      }
+ 
+     
+     
+        
+
+ 
+
+
+   
+    
+} 
+
+void myPrintChar(unsigned long t1, unsigned long t0)
+{
+  unsigned long total_time= t1-t0;
+
+  unsigned long dist= total_time*344/1000;//conert speed into 344m/s to 344m/ms
+ // dist=dist*1000;// convert m into mm;
+  Serial.print("Time:");
+  Serial.println(total_time);
+  Serial.print("Distance ");
+  Serial.println(dist);
+  
+  for(int i=0; i<26;i++)
+  {
+    if(dist==distance[i])
+    {
+      Serial.print("Char: ");
+      Serial.println(char_display[i]);
+    }
+  }
+  
+  
+  
+}
