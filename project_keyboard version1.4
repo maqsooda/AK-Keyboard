@@ -1,0 +1,97 @@
+//these define the pin connections
+
+const int microphonePin= 0; //the microphone positive terminal will connect to analog pin A0 to be read
+const int microphonePin1= A4; //the microphone positive terminal will connect to analog pin A1 to be read
+
+int sample,sample1; //the variable that will hold the value read from the microphone each time
+unsigned long time_sound, time_click;
+const int threshold= 800;//the microphone threshold sound level
+
+int i=0;
+char char_display[]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+unsigned long distance[]={70,173,138,86,55,105,125,145,150,168,193,113,211,194,170,190,33,70,75,90,130,153,40,125,110,116};
+void setup()
+{
+
+  pinMode (microphonePin1, INPUT);
+  pinMode (microphonePin, INPUT);
+  Serial.begin(9600); //sets the baud rate at 9600 so we can check the values the microphone is obtaining on the Serial Monitor
+}
+
+void loop()
+{
+ i=0;
+   sample= analogRead(microphonePin); //the arduino takes continuous readings from the microphone
+   sample1= analogRead(microphonePin1); //the arduino takes continuous readings from the microphone
+
+     if(sample<threshold && i==0)
+      {
+        time_click=millis();
+        while(1)
+        {
+          sample1= analogRead(microphonePin1); //the arduino takes continuous readings from the microphone
+          if(sample1>0)
+          {
+            time_sound=millis();
+            Serial.println("A");
+            i=1;
+            delay(1000);
+            break;
+          }
+          
+        }
+
+      }
+     if(sample1>0 && i==0)
+      {
+        time_sound=millis();
+        while(1)
+        {
+          sample= analogRead(microphonePin); //the arduino takes continuous readings from the microphone
+          if(sample<threshold)
+          {
+            time_click=millis();
+            Serial.println("B");
+            i=1;
+            delay(1000);
+            break;  
+        }
+          
+        }
+        
+      }
+ 
+
+    
+        
+
+ 
+
+
+   
+    
+} 
+/*
+void myPrintChar(unsigned long t1, unsigned long t0)
+{
+  unsigned long total_time= t1-t0;
+
+  unsigned long dist= total_time*344/1000;//conert speed into 344m/s to 344m/ms
+ // dist=dist*1000;// convert m into mm;
+  Serial.print("Time:");
+  Serial.println(total_time);
+  Serial.print("Distance ");
+  Serial.println(dist);
+  
+  for(int i=0; i<26;i++)
+  {
+    if(dist==distance[i])
+    {
+      Serial.print("Char: ");
+      Serial.println(char_display[i]);
+    }
+  }
+  
+  
+  
+}*/
